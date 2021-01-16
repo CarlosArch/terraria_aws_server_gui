@@ -74,10 +74,10 @@ class WorldTransferPage(Page):
 
             self.txt_progress_box.configure(state='normal')
             self.txt_progress_box.delete('0.0', 'end')
-            if error:
+            if error or returncode:
                 text = (error, 'ERR')
             else:
-                text = (output, 'ERR')
+                text = (output, 'OUT')
             self.txt_progress_box.insert('0.0', *text)
             while True:
                 end_char = f'{self.txt_progress_box.index("end")} - 1 chars'
@@ -119,12 +119,11 @@ class WorldTransferPage(Page):
     def _secure_copy(self, file_from, file_to):
         key_path = CONFIG.get('server', 'key_path')
         command = ['scp',
-                   f'-i config/{key_path}',
+                   '-i', f'config/{key_path}',
                    f'{file_from}',
-                   f'{file_to}']
-        # command = ['scp',
-        #            f'scp_testerino/input/scp_test.txt',
-        #            f'scp_testerino/output/']
+                   f'{file_to}',
+                   ]
+        print(command)
         self.subprocess.communicate(command)
 
 
